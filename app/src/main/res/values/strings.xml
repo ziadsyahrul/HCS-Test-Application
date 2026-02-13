@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">HCS Test App</string>
+
+    <!-- Search Screen -->
+    <string name="search_hint">Search GitHub users…</string>
+    <string name="search_users_title">Search GitHub Users</string>
+    <string name="search_users_subtitle">Enter a username to find\nGitHub developers and their profiles</string>
+    <string name="searching_users">Searching users…</string>
+    <string name="no_users_found">No users found</string>
+    <string name="retry">Retry</string>
+
+    <!-- User Detail Screen -->
+    <string name="user_profile">User Profile</string>
+    <string name="repos">REPOS</string>
+    <string name="followers">FOLLOWERS</string>
+    <string name="following">FOLLOWING</string>
+    <string name="information">INFORMATION</string>
+    <string name="view_on_github">View on GitHub</string>
+    <string name="loading_user_details">Loading user details…</string>
+    <string name="failed_to_load_user">Failed to load user details</string>
+    <string name="works_at">Works at %s</string>
+
+    <!-- Error Messages -->
+    <string name="error_network">Network error. Please check your connection.</string>
+    <string name="error_generic">An error occurred. Please try again.</string>
+    <string name="error_user_not_found">User not found</string>
+    <string name="github_search">GitHub Search</string>
+</resources>
