@@ -133,7 +133,7 @@ data/            → Data Layer (Repository Implementation, API, Database)
 
 Before running this project, make sure you have:
 
-- Android Studio Hedgehog | 2023.1.1 or newer
+- Android Studio Ladybug Feature Drop | 2024.2.2 or newer
 - JDK 17 or newer
 - Android SDK with minimum API level 24
 - Gradle 8.2 or newer
@@ -142,8 +142,8 @@ Before running this project, make sure you have:
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/yourusername/github-user-search.git
-cd github-user-search
+git clone https://github.com/ziadsyahrul/HCS-Test-Application.git
+cd HCS-Test-Application
 ```
 
 ### 2. Open in Android Studio
@@ -174,12 +174,7 @@ Android Studio will automatically sync Gradle. If not:
 
 ### Run Specific Test Class
 ```bash
-./gradlew test --tests SearchViewModelTest
-```
-
-### Run Tests with Coverage
-```bash
-./gradlew testDebugUnitTest jacocoTestReport
+./gradlew :app:testDebugUnitTest --tests "*SearchViewModelTest"
 ```
 
 ## 📦 Project Structure
@@ -187,7 +182,7 @@ Android Studio will automatically sync Gradle. If not:
 app/
 ├── src/
 │   ├── main/
-│   │   ├── java/com/yourcompany/githubusersearch/
+│   │   ├── java/com/ziad/hcstestapp/
 │   │   │   ├── data/
 │   │   │   │   ├── local/
 │   │   │   │   │   ├── dao/
@@ -220,10 +215,9 @@ app/
 │   │       ├── values/
 │   │       └── ...
 │   └── test/
-│       └── java/com/yourcompany/githubusersearch/
-│           └── presentation/
-│               ├── search/
-│               └── detail/
+│       └── java/com/ziad/hcstestapp/
+│               ├── SearchViewModelTest.kt
+│               └── UserDetailViewModel.kt
 ├── gradle/
 │   └── libs.versions.toml
 └── build.gradle.kts
@@ -286,7 +280,7 @@ Potential features for future versions:
 
 ## 👤 Author
 
-**[Your Name]**
+**Ziad Syahrul Mubarak**
 
 - Email: ziadsyahrulm@gmail.com
 - GitHub: [@ziadsyahrul](https://github.com/ziadsyahrul)
