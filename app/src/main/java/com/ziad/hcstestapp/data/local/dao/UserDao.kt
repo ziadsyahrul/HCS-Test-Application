@@ -22,9 +22,4 @@ interface UserDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertUsers(users: List<UserEntity>)
 
-    @Query("DELETE FROM github_users")
-    suspend fun clearAllUsers()
-
-    @Query("DELETE FROM github_users WHERE cached_at < :timestamp")
-    suspend fun deleteOldCache(timestamp: Long)
 }

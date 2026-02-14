@@ -7,6 +7,7 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.widget.LinearLayout
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
@@ -90,7 +91,7 @@ class SearchActivity : AppCompatActivity() {
         }
 
         viewModel.cachedUsers.observe(this) { users ->
-
+//
         }
     }
 
@@ -155,6 +156,7 @@ class SearchActivity : AppCompatActivity() {
 
     private fun navigateToUserDetail(user: GithubUser) {
         val intent = Intent(this, UserDetailActivity::class.java).apply {
+            Log.d("TAG", "navigateToUserDetail: " + user.login)
             putExtra(UserDetailActivity.EXTRA_USERNAME, user.login)
         }
         startActivity(intent)
