@@ -17,6 +17,9 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ziad.hcstestapp.R
 import com.ziad.hcstestapp.databinding.ActivityMainBinding
@@ -24,6 +27,7 @@ import com.ziad.hcstestapp.domain.model.GithubUser
 import com.ziad.hcstestapp.presentation.detail.UserDetailActivity
 import com.ziad.hcstestapp.presentation.search.adapter.UserAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class SearchActivity : AppCompatActivity() {
@@ -86,12 +90,19 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun observeViewModel() {
-        viewModel.uiState.observe(this) { state ->
-            handleUiState(state)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.collect { state ->
+                    handleUiState(state)
+                }
+            }
         }
 
         viewModel.cachedUsers.observe(this) { users ->
-//
+            if (users.isNotEmpty()) {
+                userAdapter.submitList(users)
+
+            }
         }
     }
 

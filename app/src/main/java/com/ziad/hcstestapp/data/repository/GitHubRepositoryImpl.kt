@@ -16,7 +16,7 @@ class GitHubRepositoryImpl @Inject constructor(
     private val userDao: UserDao
 ) : GitHubRepository {
 
-    override suspend fun searchUser(query: String): Flow<Result<List<GithubUser>>> = flow {
+    override fun searchUser(query: String): Flow<Result<List<GithubUser>>> = flow {
         try {
             val response = apiService.searchUsers(query)
             val users = response.items.map { it.toDomain() }
