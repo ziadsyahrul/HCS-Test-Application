@@ -19,7 +19,8 @@ fun UserDto.toDomain(): GithubUser {
         followers = followers ?: 0,
         following = following ?: 0,
         type = type,
-        htmlUrl = htmlUrl
+        htmlUrl = htmlUrl,
+        isFavorite = false
     )
 }
 
@@ -38,7 +39,8 @@ fun UserDto.toEntity(): UserEntity {
         followers = followers ?: 0,
         following = following ?: 0,
         type = type,
-        htmlUrl = htmlUrl
+        htmlUrl = htmlUrl,
+        isFavorite = false
     )
 }
 
@@ -57,6 +59,7 @@ fun UserEntity.toDomain(): GithubUser {
         followers = followers,
         following = following,
         type = type,
-        htmlUrl = htmlUrl
+        htmlUrl = htmlUrl,
+        isFavorite = isFavorite
     )
 }

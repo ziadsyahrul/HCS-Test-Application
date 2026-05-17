@@ -4,8 +4,8 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.ziad.hcstestapp.domain.model.GithubUser
 import com.ziad.hcstestapp.domain.usecase.GetCachedUsersUseCase
 import com.ziad.hcstestapp.domain.usecase.SearchUseCase
-import com.ziad.hcstestapp.presentation.search.SearchUiState
-import com.ziad.hcstestapp.presentation.search.SearchViewModel
+import com.ziad.hcstestapp.presentation.home.SearchUiState
+import com.ziad.hcstestapp.presentation.home.SearchViewModel
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers

@@ -14,5 +14,6 @@ data class GithubUser(
     val followers: Int,
     val following: Int,
     val type: String,
-    val htmlUrl: String
+    val htmlUrl: String,
+    val isFavorite: Boolean
 )

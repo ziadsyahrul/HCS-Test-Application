@@ -34,4 +34,8 @@
     <!-- Card Colors -->
     <color name="card_background">#FFFFFF</color>
     <color name="card_shadow">#1A000000</color>
+
+    <!-- Bottom Navigation -->
+    <color name="bottom_nav_selected">#6366F1</color>
+    <color name="bottom_nav_unselected">#9CA3AF</color>
 </resources>

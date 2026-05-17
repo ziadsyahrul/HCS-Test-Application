@@ -50,5 +50,8 @@ data class UserEntity(
     val htmlUrl: String,
 
     @ColumnInfo(name = "cached_at")
-    val cachedAt: Long = System.currentTimeMillis()
+    val cachedAt: Long = System.currentTimeMillis(),
+
+    @ColumnInfo(name = "is_favorite")
+    val isFavorite: Boolean = false
 )

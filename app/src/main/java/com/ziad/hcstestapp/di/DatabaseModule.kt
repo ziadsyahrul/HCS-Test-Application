@@ -23,7 +23,7 @@ object DatabaseModule {
             AppDatabase::class.java,
             "hcs_db"
         )
-            .fallbackToDestructiveMigration()
+            .addMigrations(AppDatabase.MIGRATION_1_2)
             .build()
     }
 

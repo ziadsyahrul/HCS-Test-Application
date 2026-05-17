@@ -1,4 +1,4 @@
-package com.ziad.hcstestapp.presentation.search
+package com.ziad.hcstestapp.presentation.home
 
 import android.Manifest
 import android.content.Intent
@@ -8,7 +8,9 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import android.widget.LinearLayout
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -17,55 +19,56 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ziad.hcstestapp.R
 import com.ziad.hcstestapp.databinding.ActivityMainBinding
+import com.ziad.hcstestapp.databinding.FragmentHomeBinding
 import com.ziad.hcstestapp.domain.model.GithubUser
 import com.ziad.hcstestapp.presentation.detail.UserDetailActivity
-import com.ziad.hcstestapp.presentation.search.adapter.UserAdapter
+import com.ziad.hcstestapp.presentation.home.adapter.UserAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import kotlin.getValue
 
 @AndroidEntryPoint
-class SearchActivity : AppCompatActivity() {
+class HomeFragment : Fragment() {
 
-    private lateinit var binding: ActivityMainBinding
+    private var _binding: FragmentHomeBinding? = null
+    private val binding get() = _binding!!
     private val viewModel: SearchViewModel by viewModels()
     private lateinit var userAdapter: UserAdapter
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-        askNotificationPermission()
-        setupToolbar()
-        setupRecyclerview()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setupRecyclerView()
         setupSearchInput()
         observeViewModel()
     }
 
-    private fun setupToolbar() {
-        setSupportActionBar(binding.toolbar)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
-    }
-
-    private fun setupRecyclerview() {
-        userAdapter = UserAdapter { user->
-            navigateToUserDetail(user)
+    private fun setupRecyclerView() {
+        userAdapter = UserAdapter { user ->
+            val intent = Intent(requireContext(), UserDetailActivity::class.java).apply {
+                putExtra(UserDetailActivity.EXTRA_USERNAME, user.login)
+            }
+            startActivity(intent)
         }
 
         binding.rvUsers.apply {
-            layoutManager = LinearLayoutManager(this@SearchActivity)
+            layoutManager = LinearLayoutManager(requireContext())
             adapter = userAdapter
             setHasFixedSize(true)
         }
@@ -74,14 +77,10 @@ class SearchActivity : AppCompatActivity() {
     private fun setupSearchInput() {
         binding.etSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                val query = s.toString()
-                viewModel.onSearchQueryChanged(query)
+                viewModel.onSearchQueryChanged(s.toString())
             }
-
             override fun afterTextChanged(s: Editable?) {}
-
         })
 
         binding.btnRetry.setOnClickListener {
@@ -90,40 +89,25 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun observeViewModel() {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { state ->
                     handleUiState(state)
                 }
             }
         }
-
-        viewModel.cachedUsers.observe(this) { users ->
-            if (users.isNotEmpty()) {
-                userAdapter.submitList(users)
-
-            }
-        }
     }
 
     private fun handleUiState(state: SearchUiState) {
-        when(state) {
-            is SearchUiState.Initial -> {
-                showEmptyState()
-            }
-            is SearchUiState.Loading -> {
-                showLoadingState()
-            }
-            is SearchUiState.Success -> {
-                showSuccessState(state.users)
-            }
-            is SearchUiState.Error -> {
-                showErrorState(state.message)
-            }
+        when (state) {
+            is SearchUiState.Initial -> showInitialState()
+            is SearchUiState.Loading -> showLoadingState()
+            is SearchUiState.Success -> showSuccessState(state.users)
+            is SearchUiState.Error -> showErrorState(state.message)
         }
     }
 
-    private fun showEmptyState() {
+    private fun showInitialState() {
         binding.apply {
             searchProgress.isVisible = false
             emptyStateLayout.isVisible = true
@@ -165,32 +149,8 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    private fun navigateToUserDetail(user: GithubUser) {
-        val intent = Intent(this, UserDetailActivity::class.java).apply {
-            Log.d("TAG", "navigateToUserDetail: " + user.login)
-            putExtra(UserDetailActivity.EXTRA_USERNAME, user.login)
-        }
-        startActivity(intent)
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
-
-    private fun askNotificationPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ContextCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.POST_NOTIFICATIONS
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                requestNotificationPermission.launch(Manifest.permission.POST_NOTIFICATIONS)
-            }
-        }
-    }
-
-    private val requestNotificationPermission =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-            if (isGranted) {
-                // Permission granted
-            } else {
-                // Permission denied
-            }
-        }
 }

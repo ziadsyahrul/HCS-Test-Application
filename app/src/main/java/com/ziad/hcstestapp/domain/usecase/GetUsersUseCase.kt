@@ -6,23 +6,17 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class SearchUseCase @Inject constructor(
+class GetUsersUseCase @Inject constructor(
     private val repository: GitHubRepository
 ) {
-    operator fun invoke(query: String): Flow<SearchUiState> = flow {
-
-        if (query.isBlank() || query.length < 3) {
-            emit(SearchUiState.Initial)
-            return@flow
-        }
-
+    operator fun invoke(): Flow<SearchUiState> = flow {
         emit(SearchUiState.Loading)
 
-        repository.searchUser(query).collect { result ->
+        repository.getUsers().collect { result ->
             result.fold(
-                onSuccess = { users->
+                onSuccess = { users ->
                     if (users.isEmpty()) {
-                        emit(SearchUiState.Error("No Users Found"))
+                        emit(SearchUiState.Error("No users found"))
                     } else {
                         emit(SearchUiState.Success(users))
                     }
@@ -32,6 +26,5 @@ class SearchUseCase @Inject constructor(
                 }
             )
         }
-
     }
 }

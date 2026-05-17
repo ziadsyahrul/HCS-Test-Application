@@ -6,15 +6,20 @@ import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.ziad.hcstestapp.R
 import com.ziad.hcstestapp.databinding.ActivityUserDetailBinding
 import com.ziad.hcstestapp.domain.model.GithubUser
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class UserDetailActivity : AppCompatActivity() {
@@ -79,11 +84,28 @@ class UserDetailActivity : AppCompatActivity() {
                 }
             }
         }
+
+        binding.btnFavorite.setOnClickListener {
+            currentUser?.let { user ->
+                viewModel.toggleFavorite(user.login)
+            }
+        }
     }
 
     private fun observeViewModel() {
-        viewModel.uiState.observe(this) { state ->
-            handleUiState(state)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    viewModel.uiState.collect { state ->
+                        handleUiState(state)
+                    }
+                }
+                launch {
+                    viewModel.isFavorite.collect { isFavorite ->
+                        updateFavoriteButton(isFavorite)
+                    }
+                }
+            }
         }
     }
 
@@ -134,7 +156,6 @@ class UserDetailActivity : AppCompatActivity() {
 
     private fun bindUserData(user: GithubUser) {
         binding.apply {
-            // load gambar
             if (user.avatarUrl.isNotEmpty()) {
                 Glide.with(this@UserDetailActivity)
                     .load(user.avatarUrl)
@@ -231,5 +252,27 @@ class UserDetailActivity : AppCompatActivity() {
         }
     }
 
+    private fun updateFavoriteButton(isFavorite: Boolean) {
+        binding.btnFavorite.apply {
+            if (isFavorite) {
+                text = "Unfavorite"
+                setBackgroundColor(
+                    ContextCompat.getColor(this@UserDetailActivity, R.color.primary_purple)
+                )
+                setTextColor(
+                    ContextCompat.getColor(this@UserDetailActivity, android.R.color.white)
+                )
+            } else {
+                text = "Favorite"
+                setBackgroundColor(
+                    ContextCompat.getColor(this@UserDetailActivity, android.R.color.white)
+                )
+                setTextColor(
+                    ContextCompat.getColor(this@UserDetailActivity, R.color.primary_purple)
+                )
+            }
+        }
+
+    }
 
 }

@@ -1,4 +1,4 @@
-package com.ziad.hcstestapp.presentation.search
+package com.ziad.hcstestapp.presentation.home
 
 import com.ziad.hcstestapp.domain.model.GithubUser
 

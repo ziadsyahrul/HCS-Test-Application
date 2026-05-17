@@ -1,6 +1,6 @@
 [versions]
-agp = "8.8.0"
-kotlin = "1.9.24"
+agp = "8.9.1"
+kotlin = "2.1.0"
 coreKtx = "1.13.1"
 junit = "4.13.2"
 junitVersion = "1.3.0"
@@ -11,11 +11,11 @@ activity = "1.9.0"
 constraintlayout = "2.2.1"
 lifecycle = "2.7.0"
 coroutines = "1.7.3"
-hilt = "2.48"
+hilt = "2.51.1"
 hiltNavigationCompose = "1.1.0"
 retrofit = "2.9.0"
 okhttp = "4.12.0"
-room = "2.6.1"
+room = "2.7.1"
 glide = "4.16.0"
 moshi = "1.15.0"
 chucker = "4.0.0"
@@ -25,6 +25,11 @@ mockk = "1.13.8"
 coroutinesTest = "1.7.3"
 archCore = "2.2.0"
 biometric = "1.1.0"
+activityKtx = "1.13.0"
+fragmentKtx = "1.6.2"
+ksp = "2.1.0-1.0.29"
+
+
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -80,10 +85,13 @@ androidx-arch-core-testing = { group = "androidx.arch.core", name = "core-testin
 
 # Definisi library biometric
 androidx-biometric = { group = "androidx.biometric", name = "biometric", version.ref = "biometric" }
+androidx-activity-ktx = { group = "androidx.activity", name = "activity-ktx", version.ref = "activityKtx" }
+
+androidx-fragment-ktx = { group = "androidx.fragment", name = "fragment-ktx", version.ref = "fragmentKtx" }
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
-
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

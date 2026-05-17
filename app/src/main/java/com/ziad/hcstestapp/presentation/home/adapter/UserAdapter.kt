@@ -1,4 +1,4 @@
-package com.ziad.hcstestapp.presentation.search.adapter
+package com.ziad.hcstestapp.presentation.home.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -16,7 +16,7 @@ class UserAdapter(
 ) : ListAdapter<GithubUser, UserAdapter.UserViewHolder>(UserDiffCallback()) {
 
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserAdapter.UserViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
         val binding = ItemUserBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
@@ -25,7 +25,7 @@ class UserAdapter(
         return UserViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: UserAdapter.UserViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
         holder.bind(getItem(position))
     }
 

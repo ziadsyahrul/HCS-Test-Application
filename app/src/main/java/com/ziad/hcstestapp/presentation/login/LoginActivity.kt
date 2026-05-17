@@ -11,7 +11,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.ziad.hcstestapp.R
-import com.ziad.hcstestapp.presentation.search.SearchActivity
+import com.ziad.hcstestapp.presentation.home.HomeFragment
 
 class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -84,7 +84,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun navigateToSearch() {
-        startActivity(Intent(this, SearchActivity::class.java))
+        startActivity(Intent(this, HomeFragment::class.java))
         finish()
     }
 }

@@ -22,4 +22,13 @@ interface UserDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertUsers(users: List<UserEntity>)
 
+    @Query("SELECT * FROM github_users WHERE is_favorite = 1 ORDER BY cached_at DESC")
+    fun getFavoriteUsers(): Flow<List<UserEntity>>
+
+    @Query("UPDATE github_users SET is_favorite = :isFavorite WHERE login = :username")
+    suspend fun updateFavoriteStatus(username: String, isFavorite: Boolean)
+
+    @Query("SELECT is_favorite FROM github_users WHERE login = :username LIMIT 1")
+    fun observeFavoriteStatus(username: String): Flow<Boolean>
+
 }
